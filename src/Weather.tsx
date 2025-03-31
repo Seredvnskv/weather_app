@@ -19,6 +19,7 @@ const Weather = () => {
         }
     );
 
+    const [darkMode, setDarkMode] = useState(false);
     const [city, setCity] = useState<string>('');
     const [searchInput, setSearchInput] = useState<string>('');
 
@@ -51,7 +52,7 @@ const Weather = () => {
                 if (data.length > 0) {
                     const currentCity = data[0].name;
                     console.log("You are in:", currentCity);
-                    setCity(currentCity); // <- triggers the next effect
+                    setCity(currentCity);
                 } else {
                     console.log("City not found");
                 }
@@ -96,68 +97,73 @@ const Weather = () => {
 
     return (
         <>
-            <header className="bg-white shadow-md py-4 px-6">
-                <div className="max-w-7xl mx-auto flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Weather App</h1>
-                    <div className="relative hidden md:block">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={searchInput}
-                            onChange={(e) => setSearchInput(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' && searchInput.trim()) {
-                                    search(searchInput);
-                                    setSearchInput('');
-                                }
-                            }}
-                            className="border border-gray-300 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-                        />
-                        <img
-                            src="./search.png"
-                            alt="search icon"
-                            onClick={() => {
-                                if (searchInput.trim()) {
-                                    search(searchInput);
-                                    setSearchInput('');
-                                }
-                            }}
-                            className="w-5 h-5 absolute top-2.5 right-3 text-gray-400 cursor-pointer"
-                        />
+            <div className={darkMode ? 'bg-gray-700 text-white min-h-screen' : 'bg-white text-gray-800 min-h-screen'}>
+                <header className={darkMode ? 'bg-gray-700 shadow-md py-4 px-6' : 'bg-white shadow-md py-4 px-6'}>
+                    <div className="max-w-7xl mx-auto flex justify-between items-center">
+                        <h1 className="text-2xl font-bold">Weather App</h1>
+                        <div className="relative hidden md:block">
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && searchInput.trim()) {
+                                        search(searchInput);
+                                        setSearchInput('');
+                                    }
+                                }}
+                                className="border border-gray-300 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
+                            />
+                            <img
+                                src="./search.png"
+                                alt="search icon"
+                                onClick={() => {
+                                    if (searchInput.trim()) {
+                                        search(searchInput);
+                                        setSearchInput('');
+                                    }
+                                }}
+                                className="w-5 h-5 absolute top-2.5 right-3 text-gray-400 cursor-pointer"
+                            />
+                        </div>
+                        <button
+                            className="ml-4 px-4 py-2 text-white bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500 transition"
+                            onClick={() => setDarkMode(prev => !prev)}
+                        >
+                            {darkMode ? 'Light Mode' : 'Dark Mode'}
+                        </button>
                     </div>
-                    <button className="ml-4 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
-                        Change Background
-                    </button>
-                </div>
-            </header>
+                </header>
 
-            <main>
-                <div className="max-w-md mx-auto mt-10 bg-emerald-500 shadow-lg rounded-xl p-6 text-center space-y-6">
-                    <img src={weather.icon} alt="clear icon" className="mx-auto w-24 h-24" />
-                    <p className="text-4xl font-bold text-gray-800">{weather.temperature}°C</p>
-                    <p className="text-2xl text-gray-600">{weather.location}</p>
+                <main>
+                    <div className="max-w-md mx-auto mt-10 bg-emerald-500 shadow-lg rounded-xl p-6 text-center space-y-6">
+                        <img src={weather.icon} alt="clear icon" className="mx-auto w-24 h-24" />
+                        <p className="text-4xl font-bold">{weather.temperature}°C</p>
+                        <p className="text-2xl">{weather.location}</p>
 
-                    <div className="flex justify-around mt-6 text-sm text-gray-600">
-                        {/* Humidity */}
-                        <div className="flex items-center space-x-2">
-                            <img src="./humidity.png" alt="humidity icon" className="w-8 h-8" />
-                            <div>
-                                <p className="font-semibold">{weather.humidity}%</p>
-                                <p>Humidity</p>
+                        <div className="flex justify-around mt-6 text-sm">
+                            {/* Humidity */}
+                            <div className="flex items-center space-x-2">
+                                <img src="./humidity.png" alt="humidity icon" className="w-8 h-8" />
+                                <div>
+                                    <p className="font-semibold">{weather.humidity}%</p>
+                                    <p>Humidity</p>
+                                </div>
+                            </div>
+
+                            {/* Wind */}
+                            <div className="flex items-center space-x-2">
+                                <img src="./wind.png" alt="wind icon" className="w-8 h-8" />
+                                <div>
+                                    <p className="font-semibold">{weather.windSpeed} km/h</p>
+                                    <p>Wind</p>
+                                </div>
                             </div>
                         </div>
-
-                        {/* Wind */}
-                        <div className="flex items-center space-x-2">
-                            <img src="./wind.png" alt="wind icon" className="w-8 h-8" />
-                            <div>
-                                <p className="font-semibold">{weather.windSpeed} km/h</p>
-                                <p>Wind</p>
-                            </div>
-                        </div>
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </>
     );
 };
